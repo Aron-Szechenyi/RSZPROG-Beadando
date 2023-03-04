@@ -1,7 +1,5 @@
-import ntpath
 import os
 import platform
-import posixpath
 from pathlib import Path
 
 
@@ -15,7 +13,6 @@ class Writer:
 
     def create_dir(self):
         dir_path = self.parse_path(self.output_path.split(os.sep)[0:-1])
-        print(dir_path)
         if not os.path.exists(dir_path):
             os.mkdir(dir_path)
 

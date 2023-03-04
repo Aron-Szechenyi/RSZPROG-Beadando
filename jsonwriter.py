@@ -8,4 +8,4 @@ class JsonWriter(Writer):
 
     def write(self, data):
         with open(self.output_path, "w") as write_file:
-            json.dump(data, write_file)
+            json.dump(data, write_file, indent=2)

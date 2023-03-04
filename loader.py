@@ -26,4 +26,5 @@ class Loader:
         self.fields = fields
         config.output_file = data_loaded["output_file"]
         config.data_file = data_loaded["data_file"]
+        config.table_name = data_loaded["table_name"]
 

@@ -3,6 +3,7 @@ import collections
 from tkinter import *
 import config
 from jsonwriter import JsonWriter
+from sqlwriter import SqlWriter
 
 
 class Ui:
@@ -18,9 +19,15 @@ class Ui:
         self.ui_window.mainloop()
 
     def exit(self):
-        writer = JsonWriter(self.collection, config.output_file)
-        writer.create_dir()
-        writer.write(self.collection)
+        json_writer = JsonWriter(self.collection, config.output_file)
+        json_writer.create_dir()
+        json_writer.write(self.collection)
+
+        sql_write = SqlWriter(self.collection, config.data_file)
+        sql_write.create_dir()
+        sql_write.connect()
+        sql_write.create_table_from_tags(self.tags)
+        sql_write.insert_data()
 
     def save(self):
         tmp_collection = dict()
@@ -29,7 +36,6 @@ class Ui:
             tmp_collection[self.tags[i]] = self.ui_entries_list[i].get()
         self.collection.append(tmp_collection)
         self.clear_entries()
-        print(self.collection)
 
     def clear_entries(self):
         for item in self.ui_entries_list:
