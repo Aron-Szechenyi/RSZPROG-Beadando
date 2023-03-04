@@ -16,9 +16,10 @@ class Loader:
             data_loaded = yaml.safe_load(stream)
         fields = data_loaded["fields"]
 
-        for i in range(len(fields)):
+        for i in range(0, len(fields), 2):
             if i+1 >= len(fields):
                 break
+
             temp = fields[i]
             fields[i] = fields[i+1]
             fields[i+1] = temp
