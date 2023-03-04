@@ -29,6 +29,8 @@ class Ui:
         sql_write.create_table_from_tags(self.tags)
         sql_write.insert_data()
 
+        self.ui_window.destroy()
+
     def save(self):
         tmp_collection = dict()
 
