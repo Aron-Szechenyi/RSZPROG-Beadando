@@ -6,50 +6,52 @@ from jsonwriter import JsonWriter
 
 
 class Ui:
-    ui_window = None
-    ui_elements_list = collections.deque()
-    writer = None
-    collection = []
+    ui_window, writer = None, None
+    ui_entries_list = collections.deque()
+    collection, tags = [], []
 
     def __init__(self):
         self.ui_window = Tk()
         self.ui_window.title("a3kwh7")
-        pass
 
     def show(self):
         self.ui_window.mainloop()
-        pass
 
     def exit(self):
-        a = JsonWriter(self.collection, config.output_file)
-        a.write()
+        writer = JsonWriter(self.collection, config.output_file)
+        writer.create_dir()
+        writer.write(self.collection)
 
     def save(self):
-        tmp_collection = []
-        for i in range(len(self.ui_elements_list)):
-            if i % 2 == 0:
-                tmp_collection.append(self.ui_elements_list[i].cget("text"))
-            else:
-                tmp_collection.append(self.ui_elements_list[i].get())
-                self.ui_elements_list[i].delete(0, END)
+        tmp_collection = dict()
+
+        for i in range(len(self.ui_entries_list)):
+            tmp_collection[self.tags[i]] = self.ui_entries_list[i].get()
         self.collection.append(tmp_collection)
+        self.clear_entries()
+        print(self.collection)
+
+    def clear_entries(self):
+        for item in self.ui_entries_list:
+            item.delete(0, END)
+
+    def save_tags(self, list_elements):
+        for i in reversed(range(len(list_elements))):
+            if i % 2 != 0:
+                self.tags.append(list_elements[i]["field_name"])
 
     def add_fields(self, list_elements):
         length = len(list_elements)
 
         for i in range(length):
             if i % 2 == 0:
-                self.ui_elements_list.append(
-                    Label(self.ui_window, text=list_elements[i]["label"], textvariable=list_elements[i+1])
-                )
-                print(list_elements[i+1]['field_name'])
-                self.ui_elements_list[-1].grid(column=0, row=i, sticky='W')
+                Label(self.ui_window, text=list_elements[i]["label"]).grid(column=0, row=i, sticky="w")
             else:
-                self.ui_elements_list.append(
+                self.ui_entries_list.append(
                     tkinter.Entry(self.ui_window)
                 )
-
-                self.ui_elements_list[-1].grid(column=1, row=i - 1)
+                self.ui_entries_list[-1].grid(column=1, row=i - 1)
 
         Button(self.ui_window, text="Mentés", command=self.save).grid(column=0, row=length)
         Button(self.ui_window, text="Kilépés", command=self.exit).grid(column=1, row=length)
+        self.save_tags(list_elements)
